@@ -1,0 +1,182 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { --brand: #0ea5e9; }
+body { @apply bg-slate-50; }
+.btn { @apply inline-flex items-center gap-2 rounded-2xl px-4 py-2 border shadow-sm transition; }
+.btn-primary { @apply bg-blue-500 text-white hover:bg-blue-600 border-blue-500; }
+.btn-ghost { @apply border-slate-300 bg-white hover:bg-slate-100; }
+.card { @apply bg-white rounded-2xl shadow p-4; }
+.nav-link { @apply text-slate-700 hover:text-blue-600 font-medium; }
+
+/* Enhanced hero / decorative styles */
+.hero-gradient {
+  background: radial-gradient(1200px 600px at 80% -20%, rgba(59,130,246,0.25), transparent 50%),
+              radial-gradient(1000px 600px at -20% 0%, rgba(99,102,241,0.25), transparent 40%),
+              linear-gradient(180deg, #ffffff, #f8fafc);
+}
+.glass { backdrop-filter: blur(10px); background: rgba(255,255,255,0.6); }
+.floating { animation: float 6s ease-in-out infinite; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+/* badges & post grid extras */
+.badge { @apply inline-block text-xs font-semibold px-3 py-1 rounded; }
+.badge-orange { @apply bg-orange-500 text-white; }
+.meta { @apply text-xs text-slate-500 flex items-center gap-2; }
+
+/* nav links */
+.nav-link {
+  @apply relative px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition;
+  font-weight: 600;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 10px; right: 10px; bottom: 6px;
+  height: 2px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .25s ease;
+  border-radius: 2px;
+}
+.nav-link:hover::after,
+.nav-link-active::after { transform: scaleX(1); }
+.nav-link-active { @apply text-slate-900; }
+.btn-danger {
+  @apply inline-flex items-center justify-center rounded-xl border px-3 py-2
+         text-red-700 border-red-200 hover:bg-red-50 transition disabled:opacity-60;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center rounded-xl border px-4 py-2 transition
+         hover:shadow-sm disabled:opacity-60;
+}
+.btn-primary {
+  @apply bg-blue-600 text-white border-blue-600 hover:bg-blue-700;
+}
+.btn-ghost {
+  @apply bg-white text-slate-700 border-slate-200 hover:bg-slate-50;
+}
+.card {
+  @apply rounded-2xl border bg-white/70 backdrop-blur p-4 shadow-sm;
+}
+html, body, #root { height: 100%; }
+#root { display: flex; flex-direction: column; }
+.app-main { flex: 1; } 
+.content-html { font-size: 1.05rem; line-height: 1.8; color: #111827; }
+.content-html p { margin: 0.75rem 0; }
+.content-html h1, .content-html h2, .content-html h3 { margin: 1.25rem 0 0.5rem; font-weight: 700; }
+.content-html ul, .content-html ol { margin: 0.5rem 0 0.75rem 1.25rem; }
+.content-html blockquote { margin: 1rem 0; padding-left: 1rem; border-left: 3px solid #e5e7eb; color: #374151; }
+.content-html img { max-width: 100%; height: auto; border-radius: 12px; margin: 0.75rem 0; }
+.content-html pre { background: #0f172a; color: #e2e8f0; padding: 1rem; border-radius: 12px; overflow: auto; }
+.content-html a { color: #2563eb; text-decoration: underline; }
+
+/* ===== Navbar (giống lichsu.blog) ===== */
+@layer components {
+  /* thanh line mảnh phía trên nav */
+  .nav-topline {
+    @apply h-1 bg-gradient-to-r from-[#3b82f6] via-[#1d4ed8] to-[#0ea5e9];
+  }
+
+  /* khung nav */
+  .navbar-wrap {
+    @apply sticky top-0 z-50 bg-white/95 dark:bg-neutral-950/90 backdrop-blur border-b
+           border-slate-200 dark:border-neutral-800;
+  }
+
+  /* container chuẩn */
+  .navbar-container {
+    @apply mx-auto max-w-7xl px-4 md:px-6 lg:px-8;
+  }
+
+  /* link kiểu tạp chí – xanh navy, IN HOA, khoảng cách đều */
+  .nav-item {
+    @apply inline-flex items-center text-[13.5px] font-semibold tracking-wide uppercase
+           text-[#0b3c79] dark:text-[#9ec0ff] hover:text-[#1a55a8]
+           transition-colors px-3 py-2;
+  }
+
+  /* link đang active: gạch chân xanh và đậm */
+  .nav-item-active {
+    @apply text-[#1a55a8] border-b-2 border-[#1a55a8];
+  }
+
+  /* caret nhỏ cho dropdown */
+  .caret {
+    @apply ml-1 inline-block h-3 w-3 text-current transition-transform;
+  }
+
+  /* nút tìm kiếm */
+  .nav-search {
+    @apply inline-flex items-center justify-center rounded-full border
+           border-slate-200 dark:border-neutral-700 w-9 h-9
+           hover:bg-slate-50 dark:hover:bg-neutral-800;
+  }
+}
+/* Nav items theo mock */
+.nav-item {
+  padding: .5rem .75rem;
+  border-radius: .75rem;
+  font-weight: 600;
+  color: rgb(15 23 42);
+}
+.nav-item:hover { background: rgb(241 245 249); }
+.nav-item-active {
+  background: rgb(231 235 243);
+}
+
+/* Dropdown */
+.dropdown {
+  position: absolute; left: 0; margin-top: .5rem; width: 14rem;
+  border-radius: .75rem; border: 1px solid rgb(226 232 240);
+  background: white; box-shadow: 0 10px 30px rgba(2,8,23,.06); overflow: hidden; z-index: 50;
+}
+.dropdown-item { width: 100%; text-align: left; padding: .5rem 1rem; }
+.dropdown-item:hover { background: rgb(248 250 252); }
+
+/* Search icon */
+.nav-search {
+  display:inline-flex; align-items:center; justify-content:center;
+  width: 2rem; height:2rem; border-radius:.75rem; border:1px solid rgb(226 232 240);
+}
+.nav-search:hover { background: rgb(248 250 252); }
+
+/* Pills */
+.pill {
+  font-size: .75rem; padding: .25rem .5rem; border-radius: 999px;
+  background: rgb(241 245 249); color: rgb(15 23 42);
+  border: 1px solid rgb(226 232 240);
+}
+.pill-soft {
+  font-size: .75rem; padding: .25rem .5rem; border-radius: 999px;
+  background: rgb(248 250 252); border: 1px solid rgb(226 232 240);
+}
+.pill-blue {
+  font-size: .75rem; padding: .25rem .5rem; border-radius: 999px;
+  background: rgb(219 234 254); color: rgb(29 78 216);
+  border: 1px solid rgb(191 219 254);
+}
+
+/* Buttons theo mock */
+.btn-primary {
+  display:inline-flex; align-items:center; justify-content:center;
+  padding: .5rem .9rem; border-radius: .75rem; font-weight:700;
+  background: rgb(37 99 235); color:white; border:1px solid rgb(29 78 216);
+}
+.btn-primary:hover { filter: brightness(.98); }
+.btn-ghost {
+  display:inline-flex; align-items:center; justify-content:center;
+  padding: .5rem .9rem; border-radius: .75rem; font-weight:600;
+  background: white; border:1px solid rgb(226 232 240); color: rgb(30 41 59);
+}
+.btn-ghost:hover { background: rgb(248 250 252); }
+
+/* Scrollbar giống hệ */
+.scrollbar-thin::-webkit-scrollbar { width: 8px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: rgb(203 213 225); border-radius:999px; }
+.scrollbar-stable { scrollbar-gutter: stable; }
+
+
