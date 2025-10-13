@@ -44,10 +44,6 @@ root.render(
         <RouteTracker />
 
         {/* Nút bật/tắt sáng tối — xuất hiện ở mọi trang */}
-        <div className="fixed right-4 bottom-4 z-50">
-          <DarkModeToggle />
-        </div>
-
         <App />
       </ThemeProvider>
     </BrowserRouter>
