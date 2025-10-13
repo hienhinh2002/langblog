@@ -29,13 +29,13 @@ public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
 
     @Value("${app.cors.allowed-origins:}")
-    private String allowedOrigins; // ví dụ: http://localhost:5173,https://deepenyuanben.io.vn
+    private String allowedOrigins; // ví dụ: http://localhost:5173,https://your-fe-domain.com
 
     public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
         this.jwtAuthFilter = jwtAuthFilter;
     }
 
-    /** Bỏ static uploads khỏi security chain */
+    /** Bỏ static uploads khỏi security chain (ảnh public) */
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring().requestMatchers("/uploads/**");
@@ -51,13 +51,23 @@ public class SecurityConfig {
                         // preflight
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // public
+                        // healthcheck cho UptimeRobot / Render
+                        .requestMatchers(HttpMethod.GET,
+                                "/actuator/health", "/actuator/health/**", "/health").permitAll()
+
+                        // static / ảnh (đề phòng trường hợp không đi qua web.ignoring)
+                        .requestMatchers(HttpMethod.GET,
+                                "/uploads/**", "/images/**", "/static/**").permitAll()
+
+                        // swagger (tuỳ chọn bật khi cần)
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+
+                        // public API đọc
                         .requestMatchers("/api/auth/**", "/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/links/**").permitAll()
-                        .requestMatchers("/uploads/**").permitAll()
 
-                        // write
+                        // write APIs
                         .requestMatchers(HttpMethod.POST, "/api/uploads").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/api/links/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/posts/**").hasAnyRole("ADMIN", "USER")
@@ -66,6 +76,7 @@ public class SecurityConfig {
 
                         .anyRequest().authenticated()
                 )
+                // H2 console (dev)
                 .headers(h -> h.frameOptions(f -> f.sameOrigin()));
 
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
@@ -83,16 +94,17 @@ public class SecurityConfig {
                 .filter(s -> !s.isEmpty())
                 .collect(Collectors.toList());
 
-        // Nếu dùng domain cụ thể -> setAllowedOrigins
-        // Nếu bạn muốn wildcard như https://*.domain.com -> dùng setAllowedOriginPatterns
-        c.setAllowedOrigins(origins);
+        if (!origins.isEmpty()) {
+            // Dùng danh sách origin cụ thể
+            c.setAllowedOrigins(origins);
+        } else {
+            // Fallback: cho phép mọi origin bằng patterns (hợp lệ khi allowCredentials=true)
+            c.setAllowedOriginPatterns(List.of("*"));
+        }
 
         c.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-        // Cho rộng để tránh preflight fail vì thiếu header
         c.setAllowedHeaders(List.of("*"));
-        // Nếu muốn lộ ra các header nào đó cho FE đọc:
         c.setExposedHeaders(List.of("Authorization", "Location"));
-
         c.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
