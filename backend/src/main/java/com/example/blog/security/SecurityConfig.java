@@ -20,6 +20,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableMethodSecurity
@@ -27,14 +28,14 @@ public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
 
-    @Value("${app.cors.allowed-origins}")
-    private String allowedOrigins; // ví dụ: http://localhost:5173,https://<project>.vercel.app
+    @Value("${app.cors.allowed-origins:}")
+    private String allowedOrigins; // ví dụ: http://localhost:5173,https://deepenyuanben.io.vn
 
     public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
         this.jwtAuthFilter = jwtAuthFilter;
     }
 
-    // ✅ Loại bỏ static files khỏi Security chain (không thể bị 403)
+    /** Bỏ static uploads khỏi security chain */
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring().requestMatchers("/uploads/**");
@@ -49,17 +50,20 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // preflight
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        // public api
+
+                        // public
                         .requestMatchers("/api/auth/**", "/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/links/**").permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
+
                         // write
-                        .requestMatchers(HttpMethod.POST, "/api/uploads").hasAnyRole("ADMIN","USER")
+                        .requestMatchers(HttpMethod.POST, "/api/uploads").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/api/links/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/posts/**").hasAnyRole("ADMIN","USER")
-                        .requestMatchers(HttpMethod.PUT,  "/api/posts/**").hasAnyRole("ADMIN","USER")
-                        .requestMatchers(HttpMethod.DELETE,"/api/posts/**").hasAnyRole("ADMIN","USER")
-                        // còn lại
+                        .requestMatchers(HttpMethod.POST, "/api/posts/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.PUT,  "/api/posts/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/posts/**").hasAnyRole("ADMIN", "USER")
+
                         .anyRequest().authenticated()
                 )
                 .headers(h -> h.frameOptions(f -> f.sameOrigin()));
@@ -70,25 +74,36 @@ public class SecurityConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
+        CorsConfiguration c = new CorsConfiguration();
+        c.setAllowCredentials(true);
 
+        // Parse origins từ property
         List<String> origins = Arrays.stream(allowedOrigins.split(","))
-                .map(String::trim).filter(s -> !s.isEmpty()).toList();
-        // dùng AllowedOriginPatterns để hỗ trợ wildcard nếu cần
-        config.setAllowedOriginPatterns(origins);
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
 
-        config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS","PATCH"));
-        config.setAllowedHeaders(List.of("Authorization","Content-Type"));
-        config.setExposedHeaders(List.of("Authorization"));
+        // Nếu dùng domain cụ thể -> setAllowedOrigins
+        // Nếu bạn muốn wildcard như https://*.domain.com -> dùng setAllowedOriginPatterns
+        c.setAllowedOrigins(origins);
+
+        c.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        // Cho rộng để tránh preflight fail vì thiếu header
+        c.setAllowedHeaders(List.of("*"));
+        // Nếu muốn lộ ra các header nào đó cho FE đọc:
+        c.setExposedHeaders(List.of("Authorization", "Location"));
+
+        c.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
+        source.registerCorsConfiguration("/**", c);
         return source;
     }
 
     @Bean public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
-    @Bean public AuthenticationManager authenticationManager(AuthenticationConfiguration c) throws Exception {
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration c) throws Exception {
         return c.getAuthenticationManager();
     }
 }
