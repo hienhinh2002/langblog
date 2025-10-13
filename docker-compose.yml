@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: langblog-mysql
+    environment:
+      MYSQL_DATABASE: langblog
+      MYSQL_USER: langblog
+      MYSQL_PASSWORD: langblog
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    command: >
+      --default-authentication-plugin=caching_sha2_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - db:/var/lib/mysql
+volumes:
+  db:
