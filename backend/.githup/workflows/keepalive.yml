@@ -1,0 +1,17 @@
+name: keep-render-awake
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"   # chạy mỗi 10 phút (UTC)
+  workflow_dispatch: {}       # cho phép chạy tay để test
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render backend to keep alive
+        run: |
+          echo "Pinging $PING_URL"
+          curl -I --max-time 20 "$PING_URL" || true
+    env:
+      PING_URL: ${{ secrets.KEEPALIVE_URL }}
