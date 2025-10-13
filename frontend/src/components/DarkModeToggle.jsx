@@ -22,8 +22,6 @@ export default function DarkModeToggle({ className = '' }) {
       aria-label="Bật/tắt chế độ tối"
       title={isDark ? 'Chuyển sáng' : 'Chuyển tối'}
     >
-      {isDark ? <Sun/> : <Moon/>}
-      <span className="text-sm hidden sm:inline">{isDark ? 'Sáng' : 'Tối'}</span>
     </button>
   );
 }

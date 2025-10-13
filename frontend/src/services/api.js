@@ -5,12 +5,12 @@ import axios from 'axios'
 const BASE_URL =
   (import.meta.env && import.meta.env.VITE_API_URL
     ? import.meta.env.VITE_API_URL.replace(/\/$/, '')
-    : 'http://localhost:8080/api')
+    : 'https://langblog-2.onrender.com/api')
 
 // Khởi tạo instance
 const api = axios.create({
   baseURL: BASE_URL,
-  timeout: 15000,
+  timeout: 150000,
   // withCredentials: true, // bật nếu backend cần cookie
 })
 

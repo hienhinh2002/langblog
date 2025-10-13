@@ -77,10 +77,6 @@ export default function Login() {
           <div>
             <div className="text-sm font-semibold text-blue-600">LangBlog</div>
             <h2 className="text-2xl font-bold mt-1">Đăng nhập tài khoản</h2>
-            <p className="text-slate-600 text-sm mt-1">
-              Dùng tài khoản đã tạo. (Demo nhanh: <button type="button" onClick={fillDemo}
-                className="underline text-blue-600 hover:text-blue-700">admin / admin123</button>)
-            </p>
           </div>
 
           {error && (
