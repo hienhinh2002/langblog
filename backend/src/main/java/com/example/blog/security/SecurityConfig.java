@@ -35,7 +35,7 @@ public class SecurityConfig {
         this.jwtAuthFilter = jwtAuthFilter;
     }
 
-    /** Bỏ static uploads khỏi security chain (ảnh public) */
+    /** Bỏ qua static uploads khỏi security chain (ảnh public) */
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring().requestMatchers("/uploads/**");
@@ -48,30 +48,28 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // preflight
+                        // Preflight
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // healthcheck cho UptimeRobot / Render
-                        .requestMatchers(HttpMethod.GET,
-                                "/actuator/health", "/actuator/health/**", "/health").permitAll()
+                        // Health/Actuator: mở TẤT CẢ method để tránh 403 (GET/HEAD/…)
+                        .requestMatchers("/actuator/**", "/health").permitAll()
 
-                        // static / ảnh (đề phòng trường hợp không đi qua web.ignoring)
-                        .requestMatchers(HttpMethod.GET,
-                                "/uploads/**", "/images/**", "/static/**").permitAll()
+                        // Static / ảnh (phòng trường hợp không đi qua web.ignoring)
+                        .requestMatchers(HttpMethod.GET, "/uploads/**", "/images/**", "/static/**").permitAll()
 
-                        // swagger (tuỳ chọn bật khi cần)
+                        // Swagger (tuỳ chọn)
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 
-                        // public API đọc
+                        // Public API đọc
                         .requestMatchers("/api/auth/**", "/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/links/**").permitAll()
 
-                        // write APIs
-                        .requestMatchers(HttpMethod.POST, "/api/uploads").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("/api/links/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/posts/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.PUT,  "/api/posts/**").hasAnyRole("ADMIN", "USER")
+                        // Write APIs
+                        .requestMatchers(HttpMethod.POST,   "/api/uploads").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(                   "/api/links/**").hasRole("ADMIN")            // các method khác ngoài GET
+                        .requestMatchers(HttpMethod.POST,   "/api/posts/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.PUT,    "/api/posts/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.DELETE, "/api/posts/**").hasAnyRole("ADMIN", "USER")
 
                         .anyRequest().authenticated()
@@ -95,7 +93,6 @@ public class SecurityConfig {
                 .collect(Collectors.toList());
 
         if (!origins.isEmpty()) {
-            // Dùng danh sách origin cụ thể
             c.setAllowedOrigins(origins);
         } else {
             // Fallback: cho phép mọi origin bằng patterns (hợp lệ khi allowCredentials=true)
@@ -112,7 +109,8 @@ public class SecurityConfig {
         return source;
     }
 
-    @Bean public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
+    @Bean
+    public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration c) throws Exception {
