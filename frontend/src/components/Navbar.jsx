@@ -136,21 +136,8 @@ export default function Navbar() {
                   </div>
                 )}
               </div>
-
-              <NavA to="/about">Giới thiệu</NavA>
-              <NavA to="/contact">Liên hệ</NavA>
-
               {admin && <NavA to="/manageLink">Quản lý</NavA>}
               {admin && <Link to="/createLink" className="nav-item">Tạo link</Link>}
-
-              {/* Search icon */}
-              <button className="nav-search ml-1" aria-label="Tìm kiếm">
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor">
-                  <circle cx="11" cy="11" r="7" strokeWidth="2" />
-                  <path d="M20 20l-3.5-3.5" strokeWidth="2" />
-                </svg>
-              </button>
-
               {!loggedIn ? (
                 <Link to="/login" className="nav-item ml-1">Đăng nhập</Link>
               ) : (
@@ -233,14 +220,6 @@ export default function Navbar() {
           <button className="nav-item w-full justify-start" onClick={() => gotoHomeLanguage(nav, 'CHINESE', [setOpen])}>
             Bài đăng – Tiếng Trung
           </button>
-
-          <NavA to="/about" onClick={() => setOpen(false)} className="w-full block justify-start">
-            Giới thiệu
-          </NavA>
-          <NavA to="/contact" onClick={() => setOpen(false)} className="w-full block justify-start">
-            Liên hệ
-          </NavA>
-
           {admin && (
             <NavA to="/manageLink" onClick={() => setOpen(false)} className="w-full block justify-start">
               Quản lý

@@ -130,7 +130,7 @@ export default function LinkDetail() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 py-20">
       {/* Hero */}
       <section className="rounded-2xl border shadow-sm overflow-hidden bg-white">
         <div className="grid md:grid-cols-2">

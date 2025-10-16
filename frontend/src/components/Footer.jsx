@@ -12,7 +12,7 @@ export default function Footer() {
         {/* Slogan (giữa trang) */}
         <div className="rounded-2xl border bg-white px-4 py-3 md:px-6 md:py-4 mb-3 md:mb-4 text-center">
           <p className="text-[15px] md:text-base font-semibold text-slate-700">
-            Học Tiếng Anh tự tin – mở khóa cơ hội mới
+            Biết thêm một ngôn ngữ, sống thêm một cuộc đời!
           </p>
         </div>
 
@@ -25,12 +25,12 @@ export default function Footer() {
           >
             <span className="h-11 w-11 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center">
               <svg viewBox="0 0 24 24" className="h-5 w-5 text-blue-600">
-                <path fill="currentColor" d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.03-.24c1.12.37 2.33.57 3.56.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C11.85 21 3 12.15 3 1a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.23.2 2.44.57 3.56a1 1 0 0 1-.24 1.03l-2.21 2.2Z"/>
+                <path fill="currentColor" d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.03-.24c1.12.37 2.33.57 3.56.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C11.85 21 3 12.15 3 1a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.23.2 2.44.57 3.56a1 1 0 0 1-.24 1.03l-2.21 2.2Z" />
               </svg>
             </span>
             <div className="text-sm">
               <div className="text-slate-400">Hotline</div>
-              <div className="font-semibold text-slate-800">0989 123 456</div>
+              <div className="font-semibold text-slate-800 text-xs">091 264 5095</div>
             </div>
           </a>
 
@@ -41,34 +41,39 @@ export default function Footer() {
           >
             <span className="h-11 w-11 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center">
               <svg viewBox="0 0 24 24" className="h-5 w-5 text-blue-600">
-                <path fill="currentColor" d="M20 4H4a2 2 0 0 0-2 2v.4l10 6.25L22 6.4V6a2 2 0 0 0-2-2Zm2 5.2-9.35 5.85a1 1 0 0 1-1.3 0L2 9.2V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9.2Z"/>
+                <path fill="currentColor" d="M20 4H4a2 2 0 0 0-2 2v.4l10 6.25L22 6.4V6a2 2 0 0 0-2-2Zm2 5.2-9.35 5.85a1 1 0 0 1-1.3 0L2 9.2V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9.2Z" />
               </svg>
             </span>
             <div className="text-sm">
               <div className="text-slate-400">Email</div>
-              <div className="font-semibold text-slate-800">contact@langblog.local</div>
+              <div className="font-semibold text-slate-800 text-xs">deepenenglish@gmail.com</div>
             </div>
           </a>
 
           {/* Facebook */}
           <a
-            href="https://facebook.com/yourpage"
+            href="https://www.facebook.com/tienganhmatcanban"
             target="_blank"
             rel="noreferrer"
             className="rounded-2xl border bg-white p-4 flex items-center gap-3 hover:shadow-sm transition"
           >
             <span className="h-11 w-11 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center">
-              <svg viewBox="0 0 24 24" className="h-5 w-5 text-blue-600">
-                <path fill="currentColor" d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06C2 17.05 5.66 21.2 10.44 22v-7.04H7.9v-2.9h2.54V9.41c0-2.5 1.5-3.88 3.78-3.88 1.1 0 2.25.2 2.25.2v2.48h-1.27c-1.26 0-1.65.78-1.65 1.57v1.88h2.81l-.45 2.9h-2.36V22C18.34 21.2 22 17.05 22 12.06Z"/>
+              {/* FB glyph đơn, đồng bộ kích thước với các icon khác */}
+              <svg viewBox="0 0 24 24" className="h-5 w-5 text-blue-600" aria-hidden>
+                <path
+                  fill="currentColor"
+                  d="M13.5 22v-8h2.7l.4-3h-3.1V8.6c0-.87.24-1.46 1.5-1.46h1.6V4.5c-.28-.04-1.23-.12-2.33-.12-2.3 0-3.87 1.4-3.87 3.96V11H8v3h2.4v8h3.1Z"
+                />
               </svg>
             </span>
             <div className="text-sm">
               <div className="text-slate-400">Facebook</div>
-              <div className="font-semibold text-slate-800 hover:underline">
-                facebook.com/yourpage
+              <div className="font-semibold text-slate-800 hover:underline text-xs">
+                https://www.facebook.com/tienganhmatcanban
               </div>
             </div>
           </a>
+
         </div>
 
         {/* Copyright */}
